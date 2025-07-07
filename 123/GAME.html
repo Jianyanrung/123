@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8" />
+    <title>猜數字遊戲</title>
+
+    <!-- 載入 PyScript -->
+    <link rel="stylesheet" href="https://pyscript.net/latest/pyscript.css" />
+    <script defer src="https://pyscript.net/latest/pyscript.js"></script>
+
+    <style>
+        body {
+            background-image: url("COVER.png");
+            background-size: cover;
+            background-position: center;
+            font-family: "微軟正黑體", sans-serif;
+            text-align: center;
+            padding: 60px 20px;
+            margin: 0;
+        }
+
+        h1 {
+            font-size: 40px;
+            background-color: rgba(255,255,255,0.8);
+            padding: 10px 20px;
+            border-radius: 12px;
+            display: inline-block;
+        }
+
+        #game-container {
+            background-color: rgba(255,255,255,0.85);
+            display: inline-block;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+
+        #guess {
+            padding: 12px;
+            font-size: 18px;
+            width: 200px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+        }
+
+        button {
+            padding: 12px 24px;
+            font-size: 18px;
+            background-color: #ff6f61;
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        button:hover {
+            background-color: #e85a4f;
+        }
+
+        #result {
+            font-size: 20px;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- 🎵 背景音樂自動播放 -->
+    <audio autoplay loop hidden>
+        <source src="your-music.mp3" type="audio/mpeg">
+    </audio>
+
+    <h1>猜數字遊戲</h1>
+
+    <div id="game-container">
+        <input id="guess" type="number" placeholder="輸入 1～100"><br>
+        <button py-click="check()">猜！</button>
+        <button py-click="restart()">重新遊戲</button>
+        <p id="result"></p>
+    </div>
+
+    <py-script>
+from js import document
+from random import randint
+
+answer = randint(1, 100)
+attempts = 0
+
+def check():
+    global attempts
+    guess_input = document.getElementById("guess").value
+    result = document.getElementById("result")
+
+    if not guess_input:
+        result.innerText = "請輸入一個數字！"
+        return
+
+    guess = int(guess_input)
+    attempts += 1
+
+    if guess < 1 or guess > 100:
+        result.innerText = "超出範圍，請輸入 1 到 100。"
+    elif guess < answer:
+        result.innerText = "太小了，再試一次！"
+    elif guess > answer:
+        result.innerText = "太大了，再試一次！"
+    else:
+        result.innerText = f"🎉 恭喜答對！你總共猜了 {attempts} 次！"
+
+def restart():
+    global answer, attempts
+    answer = randint(1, 100)
+    attempts = 0
+    document.getElementById("guess").value = ""
+    document.getElementById("result").innerText = "遊戲已重置，請重新開始！"
+    </py-script>
+
+</body>
+</html>
